@@ -3,67 +3,70 @@
 #include <vector>
 using namespace std;
 
+//Estructuras:
 
+struct Categorias{
+    string nombre;
+    vector <Alimento> alimentos;
+};
+
+struct Alimento{
+    string nombre;
+    float temperatura;
+    float humedad;
+    int cantidad;
+};
+
+//funciones:
+void MostrarMenu(vector <Categorias>& categoria );
+void MostrarAlimentosCategoria(const Categorias& categoria);
+void AgregarAlimentos(Categorias& categoria);
+void EliminarAlimentos(Categorias& categoria);
+void AgregarCategoria(vector <Categorias>& categoria);
+void EliminarCategoria(vector <Categorias>& categoria);
+void Almacen(vector <Categorias>& categoria);
 
 int main(){
+    vector <Categorias> categoria;
     int opcion;
-    vector<string> embutidos;
-    cout<<"Bienvenido al inventario de comida FIIA"<<endl;
-    cout<<"1.Categorias"<<endl;
-    cout<<"2.Almacen"<<endl;
-    cout<<"Ingrese una opcion"<<endl;
-    cin >> opcion;
-
-    switch (opcion)
-    {
-    case 1:
-        short int opcion;
-        cout<<"1.Embutidos"<<endl;
-        cout<<"2.Nectares"<<endl;
-        cout<<"3.Agregar nueva categoria"<<endl;
-        cout<<"4.Elimnar categoria"<<endl;
-        cout<<"5.Regresar al incio"<<endl;
-        cin >> opcion;
-        switch (opcion)
-        {
-        case 1:
-            cout<<"La lista de embutidos son: "<<endl;
-            for(const auto& embutidos : embutidos){
-                cout<<"";
-            }
-            break;
-        case 2:
-            cout<<"La lista de nectares son: "<<endl;
-            for(const auto& embutidos : embutidos){
-                cout<<"";
-            }
-            break;
-        
-        default:
-            break;
-        }
-        
-    case 2:
-        int opcion1;
-        cout<<"1.Ver categorias"<<endl;
-        cout<<"2.Regresar al incio"<<endl;
+    do{
+        cout<<"================================================"<<endl;
+        cout<<"====BIENVENIDO AL INVENTARIO DE INGREDIENTES===="<<endl;
+        cout<<"================================================"<<endl;
+        cout<<"1. Catgeorias"<<endl;
+        cout<<"2. Agregar Categoria"<<endl;
+        cout<<"3. Eliminar Catgeoria"<<endl;
+        cout<<"4. Almacen"<<endl;
+        cout<<"0. Salir del programa"<<endl;
+        cout<<"Ingrese una opcion: ";
         cin>>opcion;
-        switch (opcion1)
-        {
+
+        switch (opcion){
         case 1:
-            cout<<"1.Frutas"<<endl;
-            cout<<"2.Carnes"<<endl;
-            cout<<"3.Verduras"<<endl;
-            cout<<"4.Lacteos"<<endl;
-            cout<<"5.Añadir"<<endl;
-            cout<<"6.Eliminar"<<endl;
-            cout<<"7. regresar al inicio"<<endl;
+            MostrarMenu(categoria);
             break;
-        
+
+        case 2:
+            AgregarCategoria(categoria);
+            break;
+
+        case 3:
+            EliminarCategoria(categoria);
+            break;
+
+        case 4:
+            Almacen(categoria);
+            break;
+
+        case 0:
+            cout<<"Gracias por utilizar el programa"<<endl;
+            break;
+
         default:
             break;
         }
-    default:
-        break;
-    }
+    }while(opcion!=0);
+
+    return 0;
 }
+
