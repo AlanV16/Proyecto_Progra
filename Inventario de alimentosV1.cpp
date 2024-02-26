@@ -44,7 +44,8 @@ void MenuFabrica();
 
 int main(){
     vector <Categorias> categoria;
-    int opcion;
+    int opcion, opcionFabrica;
+    bool salirFabrica = false;
     fstream archivo("Categorias.txt");
     cargarDesdeArchivo(categoria);
 
@@ -80,14 +81,58 @@ int main(){
             break;
         
         case 5:
-            MenuFabrica();
+            system("cls");
+            salirFabrica=false;
+            do{
+                cout << "================================================" << endl;
+                cout << "============BIENVENIDO A LA FABRICA============" << endl;
+                cout << "================================================" << endl;
+                cout << "1. Fabrica" << endl;
+                cout << "2. Agregar Fabrica" << endl;
+                cout << "3. Eliminar Fabrica" << endl;
+                cout << "4. Almacen de fabrica" << endl;
+                cout << "0. Regresar al menu principal" << endl;
+                cout << "Ingrese una opcion: ";
+                cin >> opcionFabrica;
+                switch (opcionFabrica) {
+                    case 1:
+                        cout << "=====FABRICAS======" << endl;
+                        system("pause");
+                        system("cls");
+                        break;
+                    case 2:
+                        cout << "=====AGREGA======" << endl;
+                        system("pause");
+                        system("cls");
+                        break;
+                    case 3:
+                        cout << "=====ELIMINAR=====" << endl;
+                        system("pause");
+                        system("cls");
+                        break;
+                    case 4:
+                        cout << "=====Almacen======" << endl;
+                        system("pause");
+                        system("cls");
+                        break;
+                    case 0:
+                        cout << "Regresando al menu principal...." << endl;
+                        system("pause");
+                        system("cls");
+                        salirFabrica = true;
+                        break;
+                    default:
+                        cout << "Opcion invalida" << endl;
+                        break;
+                }
+            }while(!salirFabrica);
             break;
-
+            
         case 0:
             cout<<"Gracias por utilizar el programa"<<endl;
             guardarEnArchivo(categoria);
             break;
-
+            
         default:
             cout<<"Opcion invalida, vuelva a intentar"<<endl;
         }
@@ -365,4 +410,4 @@ void MenuFabrica(){
     cout << "esto es la fabrica" << endl;
     system("Pause");
     system("cls");
-};
+}
