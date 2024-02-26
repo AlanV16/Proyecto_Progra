@@ -2,10 +2,21 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include <stdlib.h>
+#include <fstream>
 using namespace std;
 
 //Estructuras:
+struct Materiales{
+    string nombreMaterial;
+    int cantidad;
+};
+
+struct Fabrica{
+    string mombreFabrica;
+    vector <Materiales> Material;
+
+};
+
 struct Alimento{
     string nombre;
     double temperatura;
@@ -27,18 +38,25 @@ void EliminarAlimentos(Categorias& categoria);
 void AgregarCategoria(vector <Categorias>& categoria);
 void EliminarCategoria(vector <Categorias>& categoria);
 void Almacen(vector <Categorias>& categoria);
+void guardarEnArchivo(const vector<Categorias>& categorias);
+void cargarDesdeArchivo(vector<Categorias>& categorias);
+void MenuFabrica();
 
 int main(){
     vector <Categorias> categoria;
     int opcion;
+    fstream archivo("Categorias.txt");
+    cargarDesdeArchivo(categoria);
+
     do{
         cout<<"================================================"<<endl;
         cout<<"====BIENVENIDO AL INVENTARIO DE INGREDIENTES===="<<endl;
         cout<<"================================================"<<endl;
         cout<<"1. Categorias"<<endl;
         cout<<"2. Agregar Categoria"<<endl;
-        cout<<"3. Eliminar Catgeoria"<<endl;
+        cout<<"3. Eliminar Categoria"<<endl;
         cout<<"4. Almacen"<<endl;
+        cout<<"5. Fabrica"<<endl;
         cout<<"0. Salir del programa"<<endl;
         cout<<"Ingrese una opcion: ";
         cin>>opcion;
@@ -57,11 +75,17 @@ int main(){
             break;
 
         case 4:
+            system("cls");
             Almacen(categoria);
+            break;
+        
+        case 5:
+            MenuFabrica();
             break;
 
         case 0:
             cout<<"Gracias por utilizar el programa"<<endl;
+            guardarEnArchivo(categoria);
             break;
 
         default:
@@ -75,6 +99,7 @@ int main(){
 //=========================================================================================================================
 
 void MostrarMenu(vector <Categorias> &categoria){
+    system("cls");
     cout<<"=============================="<<endl;
     cout<<"====Categorias disponibles===="<<endl;
     cout<<"=============================="<<endl;
@@ -95,6 +120,7 @@ void MostrarMenu(vector <Categorias> &categoria){
     if(OpcionCategoria>=1 && OpcionCategoria<=categoria.size()){
         Categorias& categoriaSeleccion= categoria[OpcionCategoria-1];
         int opcionCategoriaDetallado;
+        system("cls");
         do{
             cout<<"==================================================="<<endl;
             cout<<"===="<<"\t"<<categoriaSeleccion.nombre<<"\t"<<"===="<<endl;
@@ -108,6 +134,7 @@ void MostrarMenu(vector <Categorias> &categoria){
 
             switch(opcionCategoriaDetallado){
                 case 1:
+                    system("cls");
                     MostrarAlimentosCategoria(categoriaSeleccion);
                     break;
                 case 2:
@@ -134,11 +161,11 @@ void MostrarMenu(vector <Categorias> &categoria){
 //=========================================================================================================================
 
 void MostrarAlimentosCategoria(const Categorias& categoria){
+    int i=0;
     cout<<"======================================================="<<endl;
     cout<<"====Alimentos en "<<"\t"<<categoria.nombre<<"\t"<<"===="<<endl;
     cout<<"======================================================="<<endl;
     for(const Alimento& alimento:categoria.alimentos){
-        int i=0;
         cout<<i+1<<". "<<alimento.nombre<<" : "<<alimento.cantidad<<" unidades"<<endl;
         i++;
     }
@@ -162,6 +189,8 @@ void AgregarAlimentos(Categorias& categoria){
     cin>>nuevoAlimento.ingreso;
     categoria.alimentos.push_back(nuevoAlimento);
     cout<<"Nuevo alimento agregado con exito"<<endl;
+    system("pause");
+    system("cls");
 }
 
 //=========================================================================================================================
@@ -174,7 +203,7 @@ void EliminarAlimentos(Categorias& categoria){
         return;
     }
     cout<<"======================================================="<<endl;
-    cout<<"====Alimentos disponibles en "<<categoria.nombre<<"===="<<endl;
+    cout<<"====\tAlimentos disponibles en"<<categoria.nombre<<"===="<<endl;
     cout<<"======================================================="<<endl;
     for(size_t i=0; i<categoria.alimentos.size(); i++){
         cout<<i+1<<". "<<categoria.alimentos[i].nombre<<endl;
@@ -217,7 +246,7 @@ void EliminarCategoria(vector<Categorias>& categoria){
         system("cls");
         return;
     }
-
+    system("cls");
     cout<<"================================"<<endl;
     cout<<"==== Categorias disponibles ===="<<endl;
     cout<<"================================"<<endl;
@@ -232,6 +261,8 @@ void EliminarCategoria(vector<Categorias>& categoria){
     if(opcionEliminar >=1 && opcionEliminar<=categoria.size()){
         categoria.erase(categoria.begin()+opcionEliminar-1);
         cout<<"Categoria eliminada con exito"<<endl;
+        system("pause");
+        system("cls");
     }
     else if(opcionEliminar == 0){
         return;
@@ -264,12 +295,13 @@ void Almacen(vector<Categorias>& categoria){
     cin>> opcionCategoria;
      if(opcionCategoria>=1 && opcionCategoria<=categoria.size()){
         const Categorias& categoriaSeleccion = categoria[opcionCategoria-1];
+        system("cls");
         cout<<"====Alimentos en la categoria "<<categoriaSeleccion.nombre<<"===="<<endl;
         cout<<"\n";
-        cout<<"Nombre\tCantidad\tFecha Ingreso\tTemperatura\tHumedad"<<endl;
+        cout<<"Nombre\t\tCantidad\tFecha Ingreso\tTemperatura\tHumedad"<<endl;
         cout<<"------------------------------------------------------------------------------------------------"<<endl;
         for(const Alimento& alimento: categoriaSeleccion.alimentos){
-            cout<<alimento.nombre<<"\t"<<alimento.cantidad<<" unidades\t"<<alimento.ingreso<<"\t"<<alimento.temperatura<<"\t"<<"\t"<<alimento.temperatura<<endl;
+            cout<<alimento.nombre<<"\t"<<alimento.cantidad<<" unidades\t"<<alimento.ingreso<<"\t"<<alimento.temperatura<<"\t"<<"\t"<<alimento.humedad<<endl;
             cout<<"------------------------------------------------------------------------------------------------"<<endl;
         }
         system("pause");
@@ -282,3 +314,55 @@ void Almacen(vector<Categorias>& categoria){
         cout<<"Opncion Invalida"<<endl;
      }
 }
+
+//=========================================================================================================================
+
+void guardarEnArchivo(const vector<Categorias>& categorias) {
+    ofstream archivo("Categorias.txt", ios::out);
+    if(archivo.fail()){
+        cout << "No se pudo abrir el archivo";
+        exit(1);
+    }
+    for (const auto& categoria : categorias) {
+        archivo << categoria.nombre << "\n";
+        for (const auto& alimento : categoria.alimentos) {
+            archivo << alimento.nombre << " " << alimento.cantidad <<" "<<alimento.ingreso<<" "<<alimento.temperatura<<" "<<alimento.humedad<<"\n";
+        }
+        archivo << "#FIN#\n";
+    }
+}
+
+//=========================================================================================================================
+
+void cargarDesdeArchivo(vector<Categorias>& categorias) {
+    ifstream archivo("Categorias.txt");
+    if (!archivo.is_open()) {
+        cout << "Error al abrir archivo Categorias.txt\n";
+        return;
+    }
+
+    string nombreCategoria;
+    while (archivo >> nombreCategoria) {
+        Categorias categoria;
+        categoria.nombre = nombreCategoria;
+        while (true) {
+            Alimento alimento;
+            archivo >> alimento.nombre;
+            if (alimento.nombre == "#FIN#") break;
+            archivo >> alimento.cantidad;
+            archivo >> alimento.ingreso;
+            archivo >> alimento.temperatura;
+            archivo >> alimento.humedad;
+            categoria.alimentos.push_back(alimento);
+        }
+        categorias.push_back(categoria);
+    }
+}
+
+//=========================================================================================================================
+
+void MenuFabrica(){
+    cout << "esto es la fabrica" << endl;
+    system("Pause");
+    system("cls");
+};
